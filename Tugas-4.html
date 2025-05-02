@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Tugas 4 - JavaScript</title>
+  <style>
+    .container {
+      border: 1px solid black;
+      width: 500px;
+      padding: 30px;
+      margin-top: 30px;
+    }
+    label {
+      display: inline-block;
+      width: 150px;
+      margin-bottom: 10px;
+    }
+    input[type="text"], input[type="number"] {
+      width: 250px;
+      padding: 5px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Tugas 4 - JavaScript</h2>
+  <p>
+   
+  <div class="container">
+    <form id="formInput">
+      <label for="nama">Nama:</label>
+      <input type="text" id="nama" placeholder="&lt;Teks Nama&gt;" required><br><br>
+
+      <label for="jumlah">Jumlah Pilihan:</label>
+      <input type="number" id="jumlah" placeholder="&lt;Jml&gt;" required><br><br>
+
+      <button type="button" onclick="prosesInput()">OK</button>
+    </form>
+  </div>
+
+  <script>
+    function prosesInput() {
+      const nama = document.getElementById("nama").value;
+      const jumlah = document.getElementById("jumlah").value;
+
+      if (nama && jumlah) {
+        alert("Nama: " + nama + "\nJumlah Pilihan: " + jumlah);
+      } else {
+        alert("Mohon lengkapi semua input.");
+      }
+    }
+  </script>
+
+</body>
+</html>
