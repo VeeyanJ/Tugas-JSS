@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Tugas 4 - JavaScript</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .container, .pilihan-container {
+      width: 600px;
+      border: 1px solid black;
+      padding: 30px;
+      margin-top: 20px;
+    }
+    label {
+      display: inline-block;
+      width: 150px;
+      vertical-align: top;
+      margin-bottom: 10px;
+    }
+    input[type="text"], input[type="number"] {
+      width: 300px;
+      padding: 6px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+    }
+    .form-group {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h3>Tugas 4 - JavaScript</h3>
+  
+
+  <!-- Form Awal -->
+  <div class="container">
+    <div class="form-group">
+      <label for="nama">Nama:</label>
+      <input type="text" id="nama" placeholder="<Teks Nama>" required>
+    </div>
+
+    <div class="form-group">
+      <label for="jumlah">Jumlah Pilihan:</label>
+      <input type="number" id="jumlah" placeholder="<Jml>" required>
+    </div>
+
+    <button id="okButton" onclick="buatInputPilihan()">OK</button>
+  </div>
+
+  <!-- Form Pilihan -->
+  <div class="pilihan-container" id="pilihanContainer" style="display: none;">
+    <form id="pilihanForm"></form>
+  </div>
+
+  <script>
+    function buatInputPilihan() {
+      const namaInput = document.getElementById("nama");
+      const jumlahInput = document.getElementById("jumlah");
+      const jumlah = parseInt(jumlahInput.value);
+      const container = document.getElementById("pilihanForm");
+
+      // Validasi input
+      if (!namaInput.value || isNaN(jumlah) || jumlah < 1) {
+        alert("Isi Nama dan Jumlah Pilihan dengan benar!");
+        return;
+      }
+
+      // Disable form awal
+      namaInput.disabled = true;
+      jumlahInput.disabled = true;
+      document.getElementById("okButton").disabled = true;
+
+      // Tampilkan div pilihan
+      document.getElementById("pilihanContainer").style.display = "block";
+
+      // Buat input pilihan secara dinamis
+      for (let i = 1; i <= jumlah; i++) {
+        const label = document.createElement("label");
+        label.textContent = `Pilihan ${i} :`;
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = `<Teks Pilihan ${i}>`;
+        input.name = `pilihan${i}`;
+
+        const div = document.createElement("div");
+        div.className = "form-group";
+        div.appendChild(label);
+        div.appendChild(input);
+
+        container.appendChild(div);
+      }
+
+      // Tambah tombol OK akhir
+      const tombolOK = document.createElement("button");
+      tombolOK.textContent = "OK";
+      tombolOK.type = "button";
+      tombolOK.onclick = () => {
+        let hasil = `Nama: ${namaInput.value}\n`;
+        for (let i = 1; i <= jumlah; i++) {
+          const val = container.querySelector(`[name="pilihan${i}"]`).value;
+          hasil += `Pilihan ${i}: ${val}\n`;
+        }
+        alert(hasil);
+      };
+      container.appendChild(tombolOK);
+    }
+  </script>
+
+</body>
+</html>
