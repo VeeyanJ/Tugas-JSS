@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Form Preferensi Musik</title>
+  <style>
+    :root {
+      --header-color: #4b0082;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: white;
+      transition: background 0.6s ease;
+    }
+
+    header {
+      background-color: var(--header-color);
+      color: white;
+      padding: 20px 0;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      transition: background-color 0.6s ease;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .container {
+      background-color: white;
+      margin: 40px auto;
+      padding: 30px;
+      width: 600px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
+
+    label, p {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: var(--header-color);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    #resultBox {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f0f8ff;
+      border-left: 5px solid var(--header-color);
+      border-radius: 6px;
+    }
+
+    .genre-grid, .subgenre-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .checkbox-item {
+      background-color: #f9f9f9;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+  </style>
+</head>
+<body id="bodyBg">
+
+<header id="mainHeader">
+  <h2>Form Preferensi Musik Pengguna</h2>
+</header>
+
+<div class="container">
+  <label>Nama:</label>
+  <input type="text" id="nama" placeholder="Masukkan nama Anda">
+
+  <label>Pilih Genre Musik Favorit (boleh lebih dari satu):</label>
+  <div id="genreGroup" class="genre-grid">
+    <div class="checkbox-item"><input type="checkbox" name="genre" value="Rock" onchange="tampilkanSubgenre()"> Rock</div>
+    <div class="checkbox-item"><input type="checkbox" name="genre" value="Pop" onchange="tampilkanSubgenre()"> Pop</div>
+    <div class="checkbox-item"><input type="checkbox" name="genre" value="Indie" onchange="tampilkanSubgenre()"> Indie</div>
+    <div class="checkbox-item"><input type="checkbox" name="genre" value="Shoegaze" onchange="tampilkanSubgenre()"> Shoegaze</div>
+    <div class="checkbox-item"><input type="checkbox" name="genre" value="Emo" onchange="tampilkanSubgenre()"> Emo</div>
+  </div>
+
+  <div id="subgenreGroup" style="margin-top: 20px;"></div>
+
+  <button onclick="tampilkanHasil()">Submit</button>
+
+  <div id="resultBox" style="display: none;">
+    <p id="hasilTeks"></p>
+  </div>
+</div>
+
+<script>
+  const subgenreData = {
+    Rock: ["Alternative Rock", "Hard Rock", "Punk Rock", "Progressive Rock"],
+    Pop: ["Synth Pop", "Electro Pop", "Indie Pop", "Dance Pop"],
+    Indie: ["Indie Rock", "Indie Folk", "Lo-Fi", "Indietronica"],
+    Shoegaze: ["Dream Pop", "Noise Pop", "Nu Gaze", "Post-Rock Shoegaze"],
+    Emo: ["Midwest Emo", "Screamo", "Emo Pop", "Post-Hardcore Emo"]
+  };
+
+  const genreColors = {
+    Rock: "#1e1e1e",
+    Pop: "#ffd1dc",
+    Indie: "#c8e6c9",
+    Shoegaze: "#cfd8dc",
+    Emo: "#4b0082"
+  };
+
+  function tampilkanSubgenre() {
+    const selectedGenres = Array.from(document.querySelectorAll('input[name="genre"]:checked')).map(cb => cb.value);
+    const subgenreDiv = document.getElementById("subgenreGroup");
+    subgenreDiv.innerHTML = ''; // Clear previous subgenres
+
+    selectedGenres.forEach(genre => {
+      const label = document.createElement("p");
+      label.textContent = `Subgenre dari ${genre}:`;
+      subgenreDiv.appendChild(label);
+
+      subgenreData[genre].forEach(sub => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "checkbox-item";
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.name = "subgenre";
+        checkbox.value = `${sub} (${genre})`;
+
+        const subLabel = document.createElement("label");
+        subLabel.textContent = sub;
+
+        wrapper.appendChild(checkbox);
+        wrapper.appendChild(subLabel);
+        subgenreDiv.appendChild(wrapper);
+      });
+    });
+  }
+
+  function tampilkanHasil() {
+    const nama = document.getElementById("nama").value.trim();
+    const selectedGenres = Array.from(document.querySelectorAll('input[name="genre"]:checked')).map(cb => cb.value);
+    const selectedSubgenres = Array.from(document.querySelectorAll('input[name="subgenre"]:checked')).map(cb => cb.value);
+
+    if (!nama || selectedGenres.length === 0 || selectedSubgenres.length === 0) {
+      alert("Mohon isi nama, pilih genre, dan pilih minimal satu subgenre.");
+      return;
+    }
+
+    const hasil = `Halo, nama saya ${nama}. Saya menyukai genre musik: ${selectedGenres.join(", ")} dengan subgenre: ${selectedSubgenres.join(", ")}.`;
+    document.getElementById("hasilTeks").textContent = hasil;
+    document.getElementById("resultBox").style.display = "block";
+
+    // Change background color
+    if (selectedGenres.length > 0) {
+      const gradient = selectedGenres
+        .map(g => genreColors[g])
+        .filter(Boolean)
+        .join(', ');
+
+      if (selectedGenres.length > 1) {
+        document.body.style.background = `linear-gradient(135deg, ${gradient})`;
+      } else {
+        document.body.style.background = genreColors[selectedGenres[0]] || "white";
+      }
+
+      const firstColor = genreColors[selectedGenres[0]] || "#4b0082";
+      document.documentElement.style.setProperty('--header-color', firstColor);
+      document.getElementById("mainHeader").style.backgroundColor = firstColor;
+    } else {
+      document.body.style.background = "white";
+      document.documentElement.style.setProperty('--header-color', '#4b0082');
+      document.getElementById("mainHeader").style.backgroundColor = '#4b0082';
+    }
+  }
+</script>
+
+</body>
+</html>
