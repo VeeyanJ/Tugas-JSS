@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tugas 4 - JavaScript</title>
+  <style>
+    .container { border: 1px solid black; padding: 20px; width: 500px; }
+    input[type="text"], input[type="number"], select { width: 100%; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+
+<h2>Tugas 4 - JavaScript</h2>
+
+<p>Buat Halaman untuk memasukan <b><u>Nama</u></b> (teks) dan <b><u>JumlahPilihan</u></b> (integer) dan tombol/hyperlink <b><u>OK</u></b>:</p>
+
+<div class="container">
+  <!-- Form Nama dan Jumlah Pilihan -->
+  <label>Nama :</label>
+  <input type="text" id="nama" placeholder="&lt;Teks Nama&gt;">
+
+  <label>Jumlah Pilihan :</label>
+  <input type="number" id="jumlah" placeholder="&lt;Jml&gt;">
+
+  <button onclick="buatInputPilihan()">OK</button>
+
+  <!-- Form Input Teks Pilihan -->
+  <form id="pilihanForm" style="display:none; margin-top: 20px;"></form>
+
+  <!-- Tombol untuk menampilkan pilihan (radio/dropdown) -->
+  <div id="submitPilihan" style="display:none; margin-top: 10px;">
+    <button type="button" onclick="tampilkanPilihan()">OK</button>
+  </div>
+
+  <!-- Pilihan (Radio/Dropdown) -->
+  <div id="hasilContainer" style="display:none; margin-top: 20px;"></div>
+
+  <!-- Submit untuk hasil akhir -->
+  <div id="submitAkhir" style="display:none; margin-top: 10px;">
+    <button type="button" onclick="tampilkanKalimat()">Submit Pilihan</button>
+  </div>
+
+  <!-- Kalimat Hasil -->
+  <div id="finalResult" style="display:none; margin-top: 20px;">
+    <p id="resultText"></p>
+  </div>
+</div>
+
+<script>
+  function buatInputPilihan() {
+    const jumlah = parseInt(document.getElementById("jumlah").value);
+    const form = document.getElementById("pilihanForm");
+    form.innerHTML = "";
+
+    if (!isNaN(jumlah) && jumlah > 0) {
+      for (let i = 1; i <= jumlah; i++) {
+        const label = document.createElement("label");
+        label.textContent = `Pilihan ${i} :`;
+        const input = document.createElement("input");
+        input.type = "text";
+        input.name = "pilihan";
+        input.placeholder = `<Teks Pilihan ${i}>`;
+        form.appendChild(label);
+        form.appendChild(input);
+        form.appendChild(document.createElement("br"));
+      }
+      form.style.display = "block";
+      document.getElementById("submitPilihan").style.display = "block";
+    }
+  }
+
+  function tampilkanPilihan() {
+    const inputs = document.querySelectorAll("#pilihanForm input");
+    const hasilDiv = document.getElementById("hasilContainer");
+    hasilDiv.innerHTML = "";
+
+    if (inputs.length > 0) {
+      const pilihRadio = document.createElement("p");
+      pilihRadio.innerText = "Pilih salah satu (Radio Button):";
+      hasilDiv.appendChild(pilihRadio);
+
+      inputs.forEach((input, index) => {
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = "pilihanRadio";
+        radio.value = input.value;
+        const label = document.createElement("label");
+        label.textContent = input.value;
+        hasilDiv.appendChild(radio);
+        hasilDiv.appendChild(label);
+        hasilDiv.appendChild(document.createElement("br"));
+      });
+
+      const pilihDrop = document.createElement("p");
+      pilihDrop.innerText = "Atau pilih dari dropdown:";
+      hasilDiv.appendChild(pilihDrop);
+
+      const select = document.createElement("select");
+      select.id = "dropdownSelect";
+      inputs.forEach(input => {
+        const option = document.createElement("option");
+        option.value = input.value;
+        option.text = input.value;
+        select.appendChild(option);
+      });
+      hasilDiv.appendChild(select);
+      hasilDiv.style.display = "block";
+      document.getElementById("submitAkhir").style.display = "block";
+    }
+  }
+
+  function tampilkanKalimat() {
+    const nama = document.getElementById("nama").value;
+    const jumlah = document.getElementById("jumlah").value;
+    const pilihanInputs = document.querySelectorAll("#pilihanForm input");
+    const semuaPilihan = Array.from(pilihanInputs).map(i => i.value);
+
+    // Ambil pilihan dari radio atau dropdown
+    let dipilih = "";
+    const radioDipilih = document.querySelector('input[name="pilihanRadio"]:checked');
+    if (radioDipilih) {
+      dipilih = radioDipilih.value;
+    } else {
+      const dropdown = document.getElementById("dropdownSelect");
+      dipilih = dropdown.value;
+    }
+
+    const hasilText = `Hallo, nama saya ${nama}, saya mempunyai sejumlah ${jumlah} pilihan yaitu ${semuaPilihan.join(", ")}, dan saya memilih ${dipilih}`;
+    document.getElementById("resultText").textContent = hasilText;
+    document.getElementById("finalResult").style.display = "block";
+  }
+</script>
+
+</body>
+</html>
